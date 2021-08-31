@@ -263,6 +263,7 @@ get_appveyor_build() {(
   local type=$1
   local filepath=$2
   local appveyor_params=$3
+  # Example: https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?tag=v0.4.1&pr=false&job=Configuration%3A%20MSVC_32
   local url='https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?'"$appveyor_params"'&pr=false&job=Configuration%3A%20'"$type"
   log_info "get_appveyor_build: $url"
 
@@ -318,9 +319,9 @@ main() {
     log_info "building: stable"
     build_nightly stable
     # Push assets to the stable tag.
-    try_update_nightly stable "$stable_commit" "tag=stable"
-    # Push the same assets to the current vX.Y.Z tag.  https://github.com/neovim/neovim/issues/10011
-    try_update_nightly "$stable_semantic_tag" "$stable_commit" "tag=stable"
+    try_update_nightly stable "$stable_commit" "tag=${stable_semantic_tag}"
+    # Push assets to the current vX.Y.Z tag.  https://github.com/neovim/neovim/issues/10011
+    try_update_nightly "$stable_semantic_tag" "$stable_commit" "tag=${stable_semantic_tag}"
   else
     log_info "building: nightly"
     # Don't check. Need different builds for same commit.
